@@ -21,4 +21,9 @@
 class Tagging < ApplicationRecord
   belongs_to :recipe
   belongs_to :tag
+
+  validates :recipe_id, presence: true
+  validates :tag_id, presence: true
+
+  validates :tag_id, uniqueness: { scope: :recipe_id }
 end
