@@ -1,0 +1,136 @@
+<nav aria-label="breadcrumb">
+  <ul>
+    <li>
+      Home
+    </li>
+  </ul>
+</nav>
+
+<article>
+  <header>
+    All recipes
+  </header>
+
+  <% if @recipes.any? %>
+    <ul>
+      <% @recipes.each do |a_recipe| %>
+        <li>
+          <a href="/recipes/<%= a_recipe.id %>">
+            <strong><%= a_recipe.title %></strong>
+          </a>
+
+          <% if a_recipe.difficulty.present? %>
+            – <em><%= a_recipe.difficulty %></em>
+          <% end %>
+
+          <% if a_recipe.favorite %>
+            – ★ Favorite
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>You don't have any recipes yet.</p>
+  <% end %>
+</article>
+
+<article>
+  <header>
+    Add a new recipe
+  </header>
+
+  <% if defined?(@recipe) && @recipe.errors.any? %>
+    <div class="text-danger">
+      <p>Please fix the errors below:</p>
+      <ul>
+        <% @recipe.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <form action="/insert_recipe" method="post">
+    <!-- CSRF token so Rails accepts the POST -->
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <div>
+      <label for="recipe_title">
+        Title
+      </label>
+      <input
+        type="text"
+        id="recipe_title"
+        name="recipe[title]"
+        value="<%= @recipe&.title %>"
+        required
+      >
+    </div>
+
+    <div>
+      <label for="recipe_description">
+        Description
+      </label>
+      <textarea
+        id="recipe_description"
+        name="recipe[description]"
+        rows="3"
+      ><%= @recipe&.description %></textarea>
+    </div>
+
+    <div>
+      <label for="recipe_cook_time_minutes">
+        Cook time (minutes)
+      </label>
+      <input
+        type="number"
+        id="recipe_cook_time_minutes"
+        name="recipe[cook_time_minutes]"
+        value="<%= @recipe&.cook_time_minutes %>"
+      >
+    </div>
+
+    <div>
+      <label for="recipe_difficulty">
+        Difficulty
+      </label>
+      <select id="recipe_difficulty" name="recipe[difficulty]">
+        <option value="">Select difficulty</option>
+        <option value="Easy"   <%= "selected" if @recipe&.difficulty == "Easy" %>>Easy</option>
+        <option value="Medium" <%= "selected" if @recipe&.difficulty == "Medium" %>>Medium</option>
+        <option value="Hard"   <%= "selected" if @recipe&.difficulty == "Hard" %>>Hard</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="recipe_rating">
+        Rating (1–5)
+      </label>
+      <input
+        type="number"
+        id="recipe_rating"
+        name="recipe[rating]"
+        min="1"
+        max="5"
+        value="<%= @recipe&.rating %>"
+      >
+    </div>
+
+    <div>
+      <label for="recipe_favorite">
+        <input
+          type="checkbox"
+          id="recipe_favorite"
+          name="recipe[favorite]"
+          value="1"
+          <%= "checked" if @recipe&.favorite %>
+        >
+        Mark as favorite
+      </label>
+    </div>
+
+    <button type="submit">
+      Create recipe
+    </button>
+  </form>
+</article>
