@@ -1,14 +1,10 @@
-<nav aria-label="breadcrumb">
-  <ul>
-    <li>
-      Home
-    </li>
-  </ul>
-</nav>
-
 <article>
   <header>
-    All recipes
+    <% if params["favorites"] == "1" %>
+      Favorite recipes
+    <% else %>
+      All recipes
+    <% end %>
   </header>
 
   <% if @recipes.any? %>
@@ -27,18 +23,61 @@
             – Rating: <%= a_recipe.rating %>/5
           <% end %>
 
-          <% if a_recipe.favorite %>
-            – ★ Favorite
-          <% end %>
-
           <% if a_recipe.tags.any? %>
             – Tags:
             <%= a_recipe.tags.map(&:name).join(", ") %>
           <% end %>
 
-          <!-- Optional delete link -->
+          <% if a_recipe.favorite %>
+            – ★ Favorite
+          <% end %>
+
+          <!-- Favorite toggle form -->
           |
-          <a href="/delete_recipe/<%= a_recipe.id %>" onclick="return confirm('Delete this recipe?');">
+          <form action="/update_recipe_favorite/<%= a_recipe.id %>"
+                method="post"
+                style="display:inline">
+
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <!-- default when unchecked -->
+            <input type="hidden" name="favorite" value="0">
+
+            <% if params["favorites"] == "1" %>
+              <!-- remember user was on the favorites tab -->
+              <input type="hidden" name="from_favorites" value="1">
+            <% end %>
+
+            <label>
+              <input
+                type="checkbox"
+                name="favorite"
+                value="1"
+                <%= "checked" if a_recipe.favorite %>
+              >
+              Favorite
+            </label>
+
+            <button
+              type="submit"
+              formnovalidate
+              style="
+                padding: 2px 6px;
+                font-size: 12px;
+                border-radius: 4px;
+                background-color: #444;
+                color: white;
+                border: none;
+                cursor: pointer;
+              "
+            >
+              Save
+            </button>
+          </form>
+
+          <!-- Delete link -->
+          |
+          <a href="/delete_recipe/<%= a_recipe.id %>"
+             onclick="return confirm('Delete this recipe?');">
             Delete
           </a>
         </li>
@@ -65,6 +104,7 @@
     </div>
   <% end %>
 
+  <!-- Separate form for creating a recipe -->
   <form action="/insert_recipe" method="post">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
@@ -131,7 +171,7 @@
     </div>
 
     <div>
-      <label for="recipe_favorite">
+      <label>
         <input
           type="checkbox"
           id="recipe_favorite"
@@ -159,16 +199,13 @@
           </label>
         <% end %>
 
-        <input
-          type="hidden"
-          name="recipe[tag_ids][]"
-          value=""
-        >
+        <!-- ensures Rails gets an empty array when none are checked -->
+        <input type="hidden" name="recipe[tag_ids][]" value="">
       </fieldset>
     <% end %>
 
-    <button type="Submit">
-      Create Recipe
+    <button type="submit">
+      Create recipe
     </button>
   </form>
 </article>

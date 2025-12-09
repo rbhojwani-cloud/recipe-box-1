@@ -17,4 +17,6 @@ Rails.application.routes.draw do
   get("/tags", { :controller => "tags", :action => "index" })
   post("/modify_tag/:path_id", { :controller => "tags", :action => "update" })
   get("/delete_tag/:path_id", { :controller => "tags", :action => "destroy" })
+
+  post("/update_recipe_favorite/:path_id", { :controller => "recipes", :action => "update_favorite" })
 end
