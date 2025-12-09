@@ -24,7 +24,7 @@
 class Recipe < ApplicationRecord
   belongs_to :user
 
-  has_many :ingredients, class_name: "Ingredients", foreign_key: "user_id"
+  has_many :ingredients, class_name: "Ingredient", foreign_key: "recipe_id", dependent: :destroy
   has_many :tags, through: :taggings
 
   DIFFICULTIES = ["Easy", "Medium", "Hard"].freeze

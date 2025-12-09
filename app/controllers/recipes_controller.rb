@@ -17,7 +17,7 @@ class RecipesController < ApplicationController
       chosen_difficulty = params["difficulty"]
 
       @recipes = @recipes.select do |recipe|
-      recipe.difficulty == chosen_difficulty
+        recipe.difficulty == chosen_difficulty
       end
     end
 
@@ -26,15 +26,19 @@ class RecipesController < ApplicationController
         recipe.favorite == true
       end
     end
+
+    render template: "recipe_templates/index"
   end
 
   def show
     the_id = params.fetch("path_id")
-    @recipe = current_user.recipes.where({ :id => the_id }).at(0)
+    @recipe = current_user.recipes.where({ id: the_id }).at(0)
 
     if @recipe.nil?
-      redirect_to("/recipes", {:alert => "Recipe not found."}) and return
+      redirect_to("/recipes", alert: "Recipe not found.") and return
     end
+
+    render template: "recipe_templates/show"
   end
 
   def create
@@ -54,22 +58,23 @@ class RecipesController < ApplicationController
     end
 
     if @recipe.save
-      redirect_to("/recipes/#{@recipe.id}", { :notice => "Recipe was successfully updated." })
+      redirect_to("/recipes/#{@recipe.id}", notice: "Recipe was successfully created.")
     else
-      render("recipes/show", {:alert => "Please fix the errors below."})
+      # reload list for index page and re-render that template
+      @recipes = current_user.recipes.order(created_at: :desc)
+      render template: "recipe_templates/index"
     end
   end
 
   def destroy
     the_id = params.fetch("path_id")
-    @recipe = current_user.recipes.where({ :id => the_id }).at(0)
+    @recipe = current_user.recipes.where({ id: the_id }).at(0)
 
     if @recipe.nil?
-      redirect_to("/recipes", { :alert => "Recipe not found." }) and return
+      redirect_to("/recipes", alert: "Recipe not found.") and return
     end
 
     @recipe.destroy
-    redirect_to("/recipes", { :notice => "Recipe was successfully deleted." })
+    redirect_to("/recipes", notice: "Recipe was successfully deleted.")
   end
-
 end

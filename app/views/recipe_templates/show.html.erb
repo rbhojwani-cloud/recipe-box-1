@@ -1,0 +1,133 @@
+<nav aria-label="breadcrumb">
+  <ul>
+    <li><a href="/recipes">Home</a></li>
+    <li><%= @recipe.title %></li>
+  </ul>
+</nav>
+
+<p>
+  Owned by <%= current_user.email %>
+</p>
+
+<article>
+  <header>
+    Recipe details
+  </header>
+
+  <p>
+    <% if @recipe.description.present? %>
+      <strong>Description:</strong><br>
+      <%= @recipe.description %><br><br>
+    <% end %>
+
+    <% if @recipe.cook_time_minutes.present? %>
+      <strong>Cook time:</strong>
+      <%= @recipe.cook_time_minutes %> minutes<br>
+    <% end %>
+
+    <% if @recipe.difficulty.present? %>
+      <strong>Difficulty:</strong>
+      <%= @recipe.difficulty %><br>
+    <% end %>
+
+    <% if @recipe.rating.present? %>
+      <strong>Rating:</strong>
+      <%= @recipe.rating %> / 5<br>
+    <% end %>
+
+    <% if @recipe.favorite %>
+      <strong>Favorite:</strong> ★ Yes<br>
+    <% end %>
+  </p>
+
+  <p>
+    <a href="/recipes">Back to all recipes</a>
+    |
+    <a href="/delete_recipe/<%= @recipe.id %>" onclick="return confirm('Delete this recipe?');">
+      Delete this recipe
+    </a>
+  </p>
+</article>
+
+<article>
+  <header>
+    Ingredients
+  </header>
+
+  <% if @recipe.ingredients.any? %>
+    <div class="overflow-auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @recipe.ingredients.each do |an_ingredient| %>
+            <tr>
+              <td>
+                <%= an_ingredient.name %>
+              </td>
+
+              <td>
+                <%= an_ingredient.quantity %>
+              </td>
+
+              <td>
+                <a href="/delete_ingredient/<%= @recipe.id %>/<%= an_ingredient.id %>"
+                   onclick="return confirm('Delete this ingredient?');">
+                  Delete ingredient
+                </a>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p>No ingredients yet.</p>
+  <% end %>
+</article>
+
+<article>
+  <header>
+    Add a new ingredient
+  </header>
+
+  <form action="/insert_ingredient/<%= @recipe.id %>" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <div>
+      <label for="ingredient_name_box">
+        Name
+      </label>
+
+      <input
+        type="text"
+        id="ingredient_name_box"
+        name="ingredient[name]"
+        required
+      >
+    </div>
+
+    <div>
+      <label for="ingredient_quantity_box">
+        Quantity
+      </label>
+
+      <input
+        type="text"
+        id="ingredient_quantity_box"
+        name="ingredient[quantity]"
+        required
+      >
+    </div>
+
+    <button type="submit">
+      Add ingredient
+    </button>
+  </form>
+</article>
