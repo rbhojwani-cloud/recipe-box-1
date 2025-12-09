@@ -6,7 +6,7 @@
 </nav>
 
 <p>
-  Owned by <%= current_user.email %>
+  Owned by <%= @recipe.user.email %>
 </p>
 
 <article>
@@ -37,6 +37,11 @@
 
     <% if @recipe.favorite %>
       <strong>Favorite:</strong> ★ Yes<br>
+    <% end %>
+
+    <% if @recipe.tags.any? %>
+      <strong>Tags:</strong>
+      <%= @recipe.tags.map(&:name).join(", ") %><br>
     <% end %>
   </p>
 
@@ -126,8 +131,8 @@
       >
     </div>
 
-    <button type="submit">
-      Add ingredient
+    <button type="Submit">
+      Add Ingredient
     </button>
   </form>
 </article>

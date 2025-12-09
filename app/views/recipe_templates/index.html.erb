@@ -23,9 +23,24 @@
             – <em><%= a_recipe.difficulty %></em>
           <% end %>
 
+          <% if a_recipe.rating.present? %>
+            – Rating: <%= a_recipe.rating %>/5
+          <% end %>
+
           <% if a_recipe.favorite %>
             – ★ Favorite
           <% end %>
+
+          <% if a_recipe.tags.any? %>
+            – Tags:
+            <%= a_recipe.tags.map(&:name).join(", ") %>
+          <% end %>
+
+          <!-- Optional delete link -->
+          |
+          <a href="/delete_recipe/<%= a_recipe.id %>" onclick="return confirm('Delete this recipe?');">
+            Delete
+          </a>
         </li>
       <% end %>
     </ul>
@@ -51,7 +66,6 @@
   <% end %>
 
   <form action="/insert_recipe" method="post">
-    <!-- CSRF token so Rails accepts the POST -->
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
     <div>
@@ -129,8 +143,32 @@
       </label>
     </div>
 
-    <button type="submit">
-      Create recipe
+    <% if Tag.any? %>
+      <fieldset>
+        <legend>Tags</legend>
+
+        <% Tag.order(:name).each do |tag| %>
+          <label>
+            <input
+              type="checkbox"
+              name="recipe[tag_ids][]"
+              value="<%= tag.id %>"
+              <%= "checked" if @recipe&.tag_ids&.include?(tag.id) %>
+            >
+            <%= tag.name %>
+          </label>
+        <% end %>
+
+        <input
+          type="hidden"
+          name="recipe[tag_ids][]"
+          value=""
+        >
+      </fieldset>
+    <% end %>
+
+    <button type="Submit">
+      Create Recipe
     </button>
   </form>
 </article>

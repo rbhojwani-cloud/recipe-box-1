@@ -1,6 +1,6 @@
 class RecipesController < ApplicationController
   before_action :authenticate_user!
-  
+
   def index
     @recipes = current_user.recipes.order(created_at: :desc)
 
@@ -27,6 +27,9 @@ class RecipesController < ApplicationController
       end
     end
 
+    # build a new recipe instance for the form on the index page
+    @recipe = current_user.recipes.new
+
     render template: "recipe_templates/index"
   end
 
@@ -42,20 +45,8 @@ class RecipesController < ApplicationController
   end
 
   def create
-    @recipe = Recipe.new
-    @recipe.user_id = current_user.id
-
-    form_data = params.fetch("recipe")
-    @recipe.title             = form_data.fetch("title")
-    @recipe.description       = form_data.fetch("description", nil)
-    @recipe.cook_time_minutes = form_data.fetch("cook_time_minutes", nil)
-    @recipe.difficulty        = form_data.fetch("difficulty", nil)
-    @recipe.rating            = form_data.fetch("rating", nil)
-    @recipe.favorite          = form_data.fetch("favorite", "0") == "1"
-
-    if form_data.key?("tag_ids")
-      @recipe.tag_ids = form_data.fetch("tag_ids").reject(&:blank?)
-    end
+    # build the recipe off the current_user association
+    @recipe = current_user.recipes.new(recipe_params)
 
     if @recipe.save
       redirect_to("/recipes/#{@recipe.id}", notice: "Recipe was successfully created.")
@@ -76,5 +67,19 @@ class RecipesController < ApplicationController
 
     @recipe.destroy
     redirect_to("/recipes", notice: "Recipe was successfully deleted.")
+  end
+
+  private
+
+  def recipe_params
+    params.require(:recipe).permit(
+      :title,
+      :description,
+      :cook_time_minutes,
+      :difficulty,
+      :rating,
+      :favorite,      
+      tag_ids: []     
+    )
   end
 end
