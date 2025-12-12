@@ -7,6 +7,7 @@
 #  description       :text
 #  difficulty        :string
 #  favorite          :boolean
+#  instructions      :text
 #  rating            :integer
 #  title             :string
 #  created_at        :datetime         not null

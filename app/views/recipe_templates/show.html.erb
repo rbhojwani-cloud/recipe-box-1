@@ -43,6 +43,11 @@
       <strong>Tags:</strong>
       <%= @recipe.tags.map(&:name).join(", ") %><br>
     <% end %>
+
+    <% if @recipe.instructions.present? %>
+      <strong>Instructions:</strong><br>
+      <%= simple_format(@recipe.instructions) %><br>
+    <% end %>
   </p>
 
   <p>

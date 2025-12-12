@@ -133,6 +133,18 @@
     </div>
 
     <div>
+      <label for="recipe_instructions">
+        Instructions
+      </label>
+      <textarea
+        id="recipe_instructions"
+        name="recipe[instructions]"
+        rows="8"
+        placeholder="Enter step-by-step instructions (one step per line)"
+      ><%= @recipe&.instructions %></textarea>
+    </div>
+
+    <div>
       <label for="recipe_cook_time_minutes">
         Cook time (minutes)
       </label>
