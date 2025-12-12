@@ -19,4 +19,7 @@ Rails.application.routes.draw do
   get("/delete_tag/:path_id", { :controller => "tags", :action => "destroy" })
 
   post("/update_recipe_favorite/:path_id", { :controller => "recipes", :action => "update_favorite" })
+
+  get("/ai_recipes/new", { :controller => "ai_recipes", :action => "new" })
+  post("/ai_recipes",    { :controller => "ai_recipes", :action => "create" })
 end

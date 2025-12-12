@@ -1,0 +1,29 @@
+<article>
+  <header>AI Recipe Ideas</header>
+
+  <form action="/ai_recipes" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <div>
+      <label for="prompt_box">What do you want to cook?</label>
+      <textarea
+        id="prompt_box"
+        name="prompt"
+        rows="5"
+        placeholder="Example: chicken + broccoli + rice, 30 minutes, spicy"
+      ></textarea>
+    </div>
+
+    <div>
+      <label for="difficulty_box">Difficulty (optional)</label>
+      <select id="difficulty_box" name="difficulty">
+        <option value="">Any</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+    </div>
+
+    <button type="submit">Generate</button>
+  </form>
+</article>

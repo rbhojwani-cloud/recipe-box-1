@@ -1,0 +1,57 @@
+<article>
+  <header>Review your AI recipe</header>
+
+  <p><strong><%= @recipe.title %></strong></p>
+  <p><%= @recipe.description %></p>
+
+  <% if @suggested_tags.any? %>
+    <p><strong>Suggested tags:</strong> <%= @suggested_tags.join(", ") %></p>
+  <% end %>
+</article>
+
+<article>
+  <header>Save it (you can edit first)</header>
+
+  <form action="/insert_recipe" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <div>
+      <label for="recipe_title">Title</label>
+      <input id="recipe_title" type="text" name="recipe[title]" value="<%= @recipe.title %>" required>
+    </div>
+
+    <div>
+      <label for="recipe_description">Description</label>
+      <textarea id="recipe_description" name="recipe[description]" rows="3"><%= @recipe.description %></textarea>
+    </div>
+
+    <div>
+      <label for="recipe_cook_time_minutes">Cook time (minutes)</label>
+      <input id="recipe_cook_time_minutes" type="number" name="recipe[cook_time_minutes]" value="<%= @recipe.cook_time_minutes %>">
+    </div>
+
+    <div>
+      <label for="recipe_difficulty">Difficulty</label>
+      <select id="recipe_difficulty" name="recipe[difficulty]">
+        <option value="">Select difficulty</option>
+        <option value="Easy"   <%= "selected" if @recipe.difficulty == "Easy" %>>Easy</option>
+        <option value="Medium" <%= "selected" if @recipe.difficulty == "Medium" %>>Medium</option>
+        <option value="Hard"   <%= "selected" if @recipe.difficulty == "Hard" %>>Hard</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="recipe_instructions">Instructions</label>
+      <textarea
+        id="recipe_instructions"
+        name="recipe[instructions]"
+        rows="8"
+        placeholder="Enter step-by-step instructions (one step per line)"
+      ><%= @recipe.instructions %></textarea>
+    </div>
+
+    <button type="submit">Save recipe</button>
+  </form>
+
+  <p><a href="/ai_recipes/new">Generate another</a></p>
+</article>
