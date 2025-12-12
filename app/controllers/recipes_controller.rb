@@ -27,7 +27,6 @@ class RecipesController < ApplicationController
       end
     end
 
-    # build a new recipe instance for the form on the index page
     @recipe = current_user.recipes.new
 
     render template: "recipe_templates/index"
@@ -50,7 +49,7 @@ class RecipesController < ApplicationController
     if @recipe.save
       redirect_to("/recipes", notice: "Recipe was successfully created.")
     else
-      # reload list for index page and re-render that template
+      
       @recipes = current_user.recipes.order(created_at: :desc)
       render template: "recipe_templates/index"
     end
@@ -76,10 +75,8 @@ class RecipesController < ApplicationController
       redirect_to("/recipes", alert: "Recipe not found.") and return
     end
 
-    # "1" when checkbox is checked, "0" (from hidden field) when unchecked
     new_value = params.fetch("favorite", "0") == "1"
 
-    # skip validations, just flip the favorite flag
     @recipe.update_column(:favorite, new_value)
 
     if params["from_favorites"] == "1"

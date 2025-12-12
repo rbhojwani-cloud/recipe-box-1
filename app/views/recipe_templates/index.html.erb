@@ -32,18 +32,17 @@
             – ★ Favorite
           <% end %>
 
-          <!-- Favorite toggle form -->
           |
           <form action="/update_recipe_favorite/<%= a_recipe.id %>"
                 method="post"
                 style="display:inline">
 
             <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-            <!-- default when unchecked -->
+            
             <input type="hidden" name="favorite" value="0">
 
             <% if params["favorites"] == "1" %>
-              <!-- remember user was on the favorites tab -->
+              
               <input type="hidden" name="from_favorites" value="1">
             <% end %>
 
@@ -74,7 +73,7 @@
             </button>
           </form>
 
-          <!-- Delete link -->
+          
           |
           <a href="/delete_recipe/<%= a_recipe.id %>"
              onclick="return confirm('Delete this recipe?');">
@@ -104,7 +103,7 @@
     </div>
   <% end %>
 
-  <!-- Separate form for creating a recipe -->
+  
   <form action="/insert_recipe" method="post">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
@@ -211,7 +210,7 @@
           </label>
         <% end %>
 
-        <!-- ensures Rails gets an empty array when none are checked -->
+        
         <input type="hidden" name="recipe[tag_ids][]" value="">
       </fieldset>
     <% end %>
